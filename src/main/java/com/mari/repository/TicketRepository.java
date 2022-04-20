@@ -60,11 +60,19 @@ public class TicketRepository {
     public List<Ticket> bookTickets(List<Ticket> tickets){
         try(Session session=SessionUtil.getSession()){
             session.beginTransaction();
+            logger.info("$$$$$$$$$************  ticket-list  ***********$$$$$$$$$: "+tickets);
             for(Ticket ticket:tickets){
-                session.save(ticket);
+                logger.info("$$$$$$$$$************ ticket ***********$$$$$$$$$: "+ticket);
+                logger.info("$$$$$$$$$************blocked ticket***********$$$$$$$$$: "+ticket.getId());
                 BlockedTicket bTicket=session.get(BlockedTicket.class, ticket.getId());
+                session.save(ticket);
+                logger.info("$$$$$$$$$************blocked ticket***********$$$$$$$$$: "+bTicket);
                 session.delete(bTicket);
             }
+            BusRoute busRoute=session.get(BusRoute.class, tickets.get(0).getBusRoute().getId());
+            int remainingTickets=busRoute.getRemainingTickets()-tickets.size();
+            busRoute.setRemainingTickets(remainingTickets);
+            session.save(busRoute);
             session.getTransaction().commit();
             return tickets;
         }catch(Exception e){

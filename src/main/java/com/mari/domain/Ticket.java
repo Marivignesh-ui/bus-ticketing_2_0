@@ -27,7 +27,7 @@ public class Ticket {
     private UUID id;
 
     @Expose
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "bus_route_id")
     private BusRoute busRoute;
 
@@ -47,7 +47,7 @@ public class Ticket {
     @Column(name = "seat_no")
     private int seatNo;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -164,6 +164,13 @@ public class Ticket {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    @Override
+    public String toString() {
+        return "Ticket [bookedAt=" + bookedAt + ", date=" + date + ", fare=" + fare + ", id=" + id + ", isAvailable="
+                + isAvailable + ", orderId=" + orderId + ", paymentStatus=" + paymentStatus + ", seatNo=" + seatNo
+                + ", user=" + user + "]";
     }
 
     

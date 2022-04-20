@@ -1,6 +1,8 @@
 package com.mari.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -76,6 +78,39 @@ public class TicketController extends HttpServlet{
         resp.setHeader("Access-Control-Allow-Header", "Content-Type");
         resp.setContentType("application/json");
         resp.getWriter().write(resString);
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
+        try(JsonReader reader=new JsonReader(req.getReader())){
+            logger.debug("Request to book tickets received successfully!!");
+            reader.beginArray();
+            List<Ticket> tickets=new ArrayList<Ticket>();
+            while(reader.hasNext()){
+                tickets.add(new Gson().fromJson(reader,Ticket.class));
+            }
+            reader.endArray();
+            List<Ticket> ticketsfromDB=null;
+            logger.info("********-------------Request Object read Successfully-----------*******:"+tickets);
+            logger.info("!! About to call bookTicketService");
+            ticketsfromDB=new TicketService().bookTicketService(tickets);
+            try(PrintWriter writer=resp.getWriter()){
+                resp.setHeader("Access-Control-Allow-Origin", "*");
+                resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+                resp.setHeader("Access-Control-Allow-Header", "Content-Type");
+                resp.setStatus(200);
+                resp.setContentType("application/json");
+                writer.println(new Gson().toJson(ticketsfromDB));
+                writer.flush();
+            }
+        }catch(Exception e){
+            logger.error(e);
+            logger.catching(e);
+            resp.setStatus(500);
+            resp.setHeader("Access-Control-Allow-Origin", "*");
+            resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            resp.setHeader("Access-Control-Allow-Header", "Content-Type");
+        }   
     }
 
     @Override
