@@ -6,20 +6,27 @@ import java.util.UUID;
 
 import com.mari.bus_ticketing2.domain.Bus;
 import com.mari.bus_ticketing2.domain.BusRoute;
-import com.mari.bus_ticketing2.util.SessionUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+@Repository
 public class BusRepository {
 
     private static final Logger logger=LogManager.getLogger();
 
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    @Transactional
     public List<Bus> getBuses(String date,String startTerminal,String endTerminal,boolean flag){
-        try(Session session=SessionUtil.getSession()){
-            session.beginTransaction();
+        try {
+            Session session=sessionFactory.getCurrentSession();
             Query<Bus> query=session.createQuery("From Bus where startTerminal='"+startTerminal+"' and endTerminal='"+endTerminal+"'",Bus.class);
             List<Bus> buses=query.getResultList();
             for(int i=0;i<buses.size();i++){
@@ -45,17 +52,12 @@ public class BusRepository {
         }
     }
     
+    @Transactional
     public Bus createBus(Bus bus) {
-        try(Session session=SessionUtil.getSession()){
-            session.beginTransaction();
+        try {
+            Session session=sessionFactory.getCurrentSession();
             session.save(bus);
-            session.getTransaction().commit();
-            Bus busFromDB=null;
-            try(Session session2=SessionUtil.getSession()){
-                session2.beginTransaction();
-                Query<Bus> query=session2.createQuery("From Bus where registrationNumber='"+bus.getRegistrationNumber()+"'",Bus.class);
-                busFromDB=(Bus)query.getSingleResult();
-            }
+            Bus busFromDB=getBusByRegistrationNumber(bus.getRegistrationNumber());
             logger.info("returning response: "+bus);
             return busFromDB;
         }catch(Exception e){
@@ -65,20 +67,31 @@ public class BusRepository {
         }
     }
 
+    @Transactional
+    public Bus getBusByRegistrationNumber(String registrationNumber){
+        try {
+            Session session=sessionFactory.getCurrentSession();
+            Query<Bus> query=session.createQuery("From Bus where registrationNumber='"+registrationNumber+"'",Bus.class);
+            return (Bus)query.getSingleResult();
+        }catch(Exception e){
+            logger.error("Error Getting bus by RegistrationNumber: "+registrationNumber);
+            logger.catching(e);
+            throw new RuntimeException("Error Getting bus by RegistrationNumber: "+registrationNumber);
+        }
+    }
+
+    @Transactional
     public Bus updateBus(UUID busId,String startTerminal,String endTerminal,String journeyType){
-        try(Session session=SessionUtil.getSession()){
-            session.beginTransaction();
+        try {
+            Session session=sessionFactory.getCurrentSession();
             Bus bus=session.get(Bus.class, busId);
             bus.setStartTerminal(startTerminal);
             bus.setEndTerminal(endTerminal);
             bus.setJourneyType(journeyType);
             session.save(bus);
-            session.getTransaction().commit();
 
-            try(Session session2=SessionUtil.getSession()){
-                session2.beginTransaction();
-                bus=session2.get(Bus.class, busId);
-            }
+            bus=getBusById(busId);
+        
             return bus;
         }catch(Exception e){
             logger.error("Error updating bus");
@@ -87,13 +100,24 @@ public class BusRepository {
         }
     }
 
+    @Transactional
+    public Bus getBusById(UUID busId){
+        try {
+            Session session=sessionFactory.getCurrentSession();
+            return session.get(Bus.class, busId);
+        }catch(Exception e){
+            logger.error("Error Getting bus by Id: "+busId);
+            logger.catching(e);
+            throw new RuntimeException("Error Getting bus by Id: "+busId);
+        }
+    }
+
+    @Transactional
     public void deleteBus(UUID busId){
-        try(Session session=SessionUtil.getSession()){
-            session.beginTransaction();
+        try {
+            Session session=sessionFactory.getCurrentSession();
             Bus bus=session.get(Bus.class, busId);
             session.delete(bus);
-            session.getTransaction().commit();
-
         }catch(Exception e){
             logger.error("Error updating bus");
             logger.catching(e);
