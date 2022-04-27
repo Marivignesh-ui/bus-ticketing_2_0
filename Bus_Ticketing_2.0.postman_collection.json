@@ -1,0 +1,806 @@
+{
+	"info": {
+		"_postman_id": "2b06c0d2-c481-48e8-b03f-7ccc53840a13",
+		"name": "Bus_Ticketing_2.0",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "register user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"mari@gmail.com\",\r\n    \"password\":\"mari@123\",\r\n    \"firstName\":\"Mari\",\r\n    \"lastName\":\"Vignesh\",\r\n    \"mobileNumber\":\"1478529630\",\r\n    \"aadharNumber\":\"123456789102\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/bus-ticketing_2_0/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bus-ticketing_2_0",
+								"register"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "registering mari",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\":\"mari@gmail.com\",\r\n    \"password\":\"mari@123\",\r\n    \"firstName\":\"Mari\",\r\n    \"lastName\":\"Vignesh\",\r\n    \"mobileNumber\":\"1478529630\",\r\n    \"aadharNumber\":\"123456789102\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/bus-ticketing_2_0/register",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"bus-ticketing_2_0",
+										"register"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET, POST, PUT, DELETE, OPTIONS"
+								},
+								{
+									"key": "Access-Control-Allow-Header",
+									"value": "Content-Type"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json;charset=ISO-8859-1"
+								},
+								{
+									"key": "Content-Length",
+									"value": "235"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 13 Apr 2022 05:41:44 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=20"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"ok\": true,\n    \"message\": \"User Registration Success\",\n    \"responseObject\": {\n        \"id\": \"5ceae01c-ecb4-4aa6-b5cb-842f35187d5e\",\n        \"email\": \"mari@gmail.com\",\n        \"firstName\": \"Mari\",\n        \"lastName\": \"Vignesh\",\n        \"mobileNumber\": \"1478529630\",\n        \"aadharNumber\": \"123456789102\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "login user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"mari@gmail.com\",\r\n    \"password\":\"mari@123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/bus-ticketing_2_0/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bus-ticketing_2_0",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "login user",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\":\"mari@gmail.com\",\r\n    \"password\":\"mari@123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/bus-ticketing_2_0/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"bus-ticketing_2_0",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET, POST, PUT, DELETE, OPTIONS"
+								},
+								{
+									"key": "Access-Control-Allow-Header",
+									"value": "Content-Type"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json;charset=ISO-8859-1"
+								},
+								{
+									"key": "Content-Length",
+									"value": "223"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 13 Apr 2022 06:01:02 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=20"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"ok\": true,\n    \"message\": \"Login Success\",\n    \"responseObject\": {\n        \"id\": \"5ceae01c-ecb4-4aa6-b5cb-842f35187d5e\",\n        \"email\": \"mari@gmail.com\",\n        \"firstName\": \"Mari\",\n        \"lastName\": \"Vignesh\",\n        \"mobileNumber\": \"1478529630\",\n        \"aadharNumber\": \"123456789102\"\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Bus",
+			"item": [
+				{
+					"name": "create bus",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"registrationNumber\":\"TN57CZ1720\",\r\n    \"travelsName\":\"Tesla Travels\",\r\n    \"startTerminal\":\"chennai\",\r\n    \"endTerminal\":\"dindigul\",\r\n    \"busType\":\"ultra deluxe\",\r\n    \"journeyType\":\"Everyday\",\r\n    \"totalSeats\":32\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/bus-ticketing_2_0/bus",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bus-ticketing_2_0",
+								"bus"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "create bus",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"registrationNumber\":\"TN57CZ1714\",\r\n    \"travelsName\":\"Sundhara Travels\",\r\n    \"startTerminal\":\"Chennai\",\r\n    \"endTerminal\":\"Dindigul\",\r\n    \"busType\":\"ultra deluxe\",\r\n    \"journeyType\":\"Everyday\",\r\n    \"totalSeats\":32\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/bus-ticketing_2_0/bus",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"bus-ticketing_2_0",
+										"bus"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET, POST, PUT, DELETE, OPTIONS"
+								},
+								{
+									"key": "Access-Control-Allow-Header",
+									"value": "Content-Type"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json;charset=ISO-8859-1"
+								},
+								{
+									"key": "Content-Length",
+									"value": "295"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 13 Apr 2022 06:58:18 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=20"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"ok\": true,\n    \"message\": \"successfully created bus\",\n    \"responseObject\": {\n        \"id\": \"872a1363-0d7a-4a01-946f-f0969722a464\",\n        \"startTerminal\": \"Chennai\",\n        \"endTerminal\": \"Dindigul\",\n        \"registrationNumber\": \"TN57CZ1714\",\n        \"travelsName\": \"Sundhara Travels\",\n        \"busType\": \"ultra deluxe\",\n        \"totalSeats\": 32,\n        \"journeyType\": \"Everyday\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "update bus",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"busId\": \"24f8e6cd-4b7c-4d6e-acd5-dffa309cfd81\",\r\n    \"startTerminal\": \"dindigul\",\r\n    \"endTerminal\": \"chennai\",\r\n    \"journeyType\":\"Alternative-1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/bus-ticketing_2_0/bus",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bus-ticketing_2_0",
+								"bus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete bus",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"busId\":\"872a1363-0d7a-4a01-946f-f0969722a464\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/bus-ticketing_2_0/bus",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bus-ticketing_2_0",
+								"bus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Bus",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/bus-ticketing_2_0/bus?startterminal=chennai&endterminal=dindigul&date=2022-04-15",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bus-ticketing_2_0",
+								"bus"
+							],
+							"query": [
+								{
+									"key": "startterminal",
+									"value": "chennai"
+								},
+								{
+									"key": "endterminal",
+									"value": "dindigul"
+								},
+								{
+									"key": "date",
+									"value": "2022-04-15"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Bus",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/bus-ticketing_2_0/bus?startterminal=chennai&endterminal=dindigul&date=2022-04-15",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"bus-ticketing_2_0",
+										"bus"
+									],
+									"query": [
+										{
+											"key": "startterminal",
+											"value": "chennai"
+										},
+										{
+											"key": "endterminal",
+											"value": "dindigul"
+										},
+										{
+											"key": "date",
+											"value": "2022-04-15"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET, POST, PUT, DELETE, OPTIONS"
+								},
+								{
+									"key": "Access-Control-Allow-Header",
+									"value": "Content-Type"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json;charset=ISO-8859-1"
+								},
+								{
+									"key": "Content-Length",
+									"value": "400"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 15 Apr 2022 07:08:27 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=20"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"ok\": true,\n    \"message\": \"Bus List Retrived sucessfully\",\n    \"responseObject\": [\n        {\n            \"id\": \"e171ec00-5996-4e8d-a5df-5c06edcc8902\",\n            \"startTerminal\": \"chennai\",\n            \"endTerminal\": \"dindigul\",\n            \"registrationNumber\": \"TN57CZ1711\",\n            \"travelsName\": \"Neruppuda\",\n            \"busType\": \"Ultra deluxe\",\n            \"totalSeats\": 42,\n            \"journeyType\": \"Alternative\",\n            \"busRoutes\": [\n                {\n                    \"id\": \"364ccf62-edce-4a65-8321-cd2432a0c78b\",\n                    \"date\": \"2022-04-15\",\n                    \"remainingTickets\": 32\n                }\n            ]\n        }\n    ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Ticket",
+			"item": [
+				{
+					"name": "Get Tickets",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"string_you_want_to_search\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/bus-ticketing_2_0/tickets?route_id=364ccf62-edce-4a65-8321-cd2432a0c78b&date=2022-04-15",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bus-ticketing_2_0",
+								"tickets"
+							],
+							"query": [
+								{
+									"key": "route_id",
+									"value": "364ccf62-edce-4a65-8321-cd2432a0c78b"
+								},
+								{
+									"key": "date",
+									"value": "2022-04-15"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Tickets",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/bus-ticketing_2_0/tickets?route_id=364ccf62-edce-4a65-8321-cd2432a0c78b&date=2022-04-15",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"bus-ticketing_2_0",
+										"tickets"
+									],
+									"query": [
+										{
+											"key": "route_id",
+											"value": "364ccf62-edce-4a65-8321-cd2432a0c78b"
+										},
+										{
+											"key": "date",
+											"value": "2022-04-15"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET, POST, PUT, DELETE, OPTIONS"
+								},
+								{
+									"key": "Access-Control-Allow-Header",
+									"value": "Content-Type"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json;charset=ISO-8859-1"
+								},
+								{
+									"key": "Content-Length",
+									"value": "837"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 15 Apr 2022 10:37:16 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=20"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"ok\": true,\n    \"message\": \"Tickets retrived successfully\",\n    \"responseObject\": [\n        {\n            \"id\": \"3c719339-3ed9-4d60-87c7-63eb643933b9\",\n            \"busRoute\": {\n                \"id\": \"364ccf62-edce-4a65-8321-cd2432a0c78b\",\n                \"date\": \"2022-04-15\",\n                \"remainingTickets\": 32\n            },\n            \"fare\": \"1200\",\n            \"date\": \"2022-04-15\",\n            \"isAvailable\": false,\n            \"seatNo\": 3,\n            \"bookedAt\": \"Apr 15, 2022 12:31:24 PM\",\n            \"orderId\": \"62a23dfe-3dfe-4cfd-a717-62d8b1e6adef\"\n        },\n        {\n            \"id\": \"cf7dd718-98dd-4507-9bef-33574b0db352\",\n            \"busRoute\": {\n                \"id\": \"364ccf62-edce-4a65-8321-cd2432a0c78b\",\n                \"date\": \"2022-04-15\",\n                \"remainingTickets\": 32\n            },\n            \"date\": \"2022-04-15\",\n            \"isAvailable\": false,\n            \"seatNo\": 2,\n            \"bookedAt\": \"Apr 15, 2022 11:30:45 AM\"\n        },\n        {\n            \"id\": \"d522499b-2dce-4d36-8fe2-2a719eabae23\",\n            \"busRoute\": {\n                \"id\": \"364ccf62-edce-4a65-8321-cd2432a0c78b\",\n                \"date\": \"2022-04-15\",\n                \"remainingTickets\": 32\n            },\n            \"date\": \"2022-04-15\",\n            \"isAvailable\": false,\n            \"seatNo\": 1,\n            \"bookedAt\": \"Apr 15, 2022 11:27:13 AM\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "block tickets",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"seatId\":\"364ccf62-edce-4a65-8321-cd2432a0c78b-2022-04-15-06\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/bus-ticketing_2_0/tickets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bus-ticketing_2_0",
+								"tickets"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "block tickets",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"seatId\":\"364ccf62-edce-4a65-8321-cd2432a0c78b-2022-04-15-06\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/bus-ticketing_2_0/tickets",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"bus-ticketing_2_0",
+										"tickets"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET, POST, PUT, DELETE, OPTIONS"
+								},
+								{
+									"key": "Access-Control-Allow-Header",
+									"value": "Content-Type"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json;charset=ISO-8859-1"
+								},
+								{
+									"key": "Content-Length",
+									"value": "267"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 17 Apr 2022 05:27:00 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=20"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"ok\": true,\n    \"message\": \"blocked tickets Successfully\",\n    \"responseObject\": {\n        \"id\": \"54b3be32-0f65-4307-9828-246cf5f7615a\",\n        \"date\": \"2022-04-15\",\n        \"isBlocked\": true,\n        \"seatId\": \"364ccf62-edce-4a65-8321-cd2432a0c78b-2022-04-15-06\",\n        \"seatNumber\": 6,\n        \"bookedAt\": \"Apr 17, 2022 10:56:59 AM\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "book tickets",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"id\": \"3b92d9e4-ee31-4317-a34b-fb8e075abd33\",\r\n        \"busRoute\": {\r\n            \"id\": \"364ccf62-edce-4a65-8321-cd2432a0c78b\",\r\n            \"date\": \"2022-04-15\",\r\n            \"remainingTickets\": 32\r\n        },\r\n        \"fare\": \"1200\",\r\n        \"date\": \"2022-04-15\",\r\n        \"isAvailable\": false,\r\n        \"seatNo\": 5,\r\n        \"user\":{\r\n            \"id\":\"5ceae01c-ecb4-4aa6-b5cb-842f35187d5e\"\r\n        },\r\n        \"bookedAt\": \"Apr 15, 2022 12:31:24 PM\",\r\n        \"orderId\": \"62a23dfe-3dfe-4cfd-a717-62d8b1e6adef\",\r\n        \"paymentStatus\":true\r\n    },\r\n    {\r\n        \"id\": \"cf7dd718-98dd-4507-9bef-33574b0db352\",\r\n        \"busRoute\": {\r\n            \"id\": \"364ccf62-edce-4a65-8321-cd2432a0c78b\",\r\n            \"date\": \"2022-04-15\",\r\n            \"remainingTickets\": 32\r\n        },\r\n        \"fare\": \"1200\",\r\n        \"date\": \"2022-04-15\",\r\n        \"isAvailable\": false,\r\n        \"seatNo\": 2,\r\n        \"user\":{\r\n            \"id\":\"5ceae01c-ecb4-4aa6-b5cb-842f35187d5e\"\r\n        },\r\n        \"bookedAt\": \"Apr 15, 2022 12:31:24 PM\",\r\n        \"orderId\": \"62a23dfe-3dfe-4cfd-a717-62d8b1e6adef\",\r\n        \"paymentStatus\":true\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/bus-ticketing_2_0/tickets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bus-ticketing_2_0",
+								"tickets"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "book tickets",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"id\": \"3b92d9e4-ee31-4317-a34b-fb8e075abd33\",\r\n        \"busRoute\": {\r\n            \"id\": \"364ccf62-edce-4a65-8321-cd2432a0c78b\",\r\n            \"date\": \"2022-04-15\",\r\n            \"remainingTickets\": 32\r\n        },\r\n        \"fare\": \"1200\",\r\n        \"date\": \"2022-04-15\",\r\n        \"isAvailable\": false,\r\n        \"seatNo\": 5,\r\n        \"user\":{\r\n            \"id\":\"5ceae01c-ecb4-4aa6-b5cb-842f35187d5e\"\r\n        },\r\n        \"bookedAt\": \"Apr 15, 2022 12:31:24 PM\",\r\n        \"orderId\": \"62a23dfe-3dfe-4cfd-a717-62d8b1e6adef\",\r\n        \"paymentStatus\":true\r\n    },\r\n    {\r\n        \"id\": \"cf7dd718-98dd-4507-9bef-33574b0db352\",\r\n        \"busRoute\": {\r\n            \"id\": \"364ccf62-edce-4a65-8321-cd2432a0c78b\",\r\n            \"date\": \"2022-04-15\",\r\n            \"remainingTickets\": 32\r\n        },\r\n        \"fare\": \"1200\",\r\n        \"date\": \"2022-04-15\",\r\n        \"isAvailable\": false,\r\n        \"seatNo\": 2,\r\n        \"user\":{\r\n            \"id\":\"5ceae01c-ecb4-4aa6-b5cb-842f35187d5e\"\r\n        },\r\n        \"bookedAt\": \"Apr 15, 2022 12:31:24 PM\",\r\n        \"orderId\": \"62a23dfe-3dfe-4cfd-a717-62d8b1e6adef\",\r\n        \"paymentStatus\":true\r\n    }\r\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/bus-ticketing_2_0/tickets",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"bus-ticketing_2_0",
+										"tickets"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET, POST, PUT, DELETE, OPTIONS"
+								},
+								{
+									"key": "Access-Control-Allow-Header",
+									"value": "Content-Type"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json;charset=ISO-8859-1"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 20 Apr 2022 07:06:01 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=20"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": \"45305610-3317-4848-821c-731a479e332f\",\n        \"busRoute\": {\n            \"id\": \"364ccf62-edce-4a65-8321-cd2432a0c78b\",\n            \"date\": \"2022-04-15\",\n            \"remainingTickets\": 32\n        },\n        \"fare\": \"1200\",\n        \"date\": \"2022-04-15\",\n        \"isAvailable\": false,\n        \"seatNo\": 5,\n        \"user\": {\n            \"id\": \"5ceae01c-ecb4-4aa6-b5cb-842f35187d5e\"\n        },\n        \"bookedAt\": \"Apr 15, 2022 12:31:24 PM\",\n        \"orderId\": \"62a23dfe-3dfe-4cfd-a717-62d8b1e6adef\",\n        \"paymentStatus\": true\n    },\n    {\n        \"id\": \"738eba95-8b1d-4e56-8a6c-e4e950cbe7f3\",\n        \"busRoute\": {\n            \"id\": \"364ccf62-edce-4a65-8321-cd2432a0c78b\",\n            \"date\": \"2022-04-15\",\n            \"remainingTickets\": 32\n        },\n        \"fare\": \"1200\",\n        \"date\": \"2022-04-15\",\n        \"isAvailable\": false,\n        \"seatNo\": 2,\n        \"user\": {\n            \"id\": \"5ceae01c-ecb4-4aa6-b5cb-842f35187d5e\"\n        },\n        \"bookedAt\": \"Apr 15, 2022 12:31:24 PM\",\n        \"orderId\": \"62a23dfe-3dfe-4cfd-a717-62d8b1e6adef\",\n        \"paymentStatus\": true\n    }\n]"
+						}
+					]
+				}
+			]
+		}
+	]
+}
