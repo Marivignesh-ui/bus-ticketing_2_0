@@ -3,31 +3,31 @@ package com.mari.bus_ticketing2.repository;
 import javax.persistence.Query;
 
 import com.mari.bus_ticketing2.domain.User;
-import com.mari.bus_ticketing2.util.SessionUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
-
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+@Repository
 public class UserRepository {
     
     private static final Logger logger=LogManager.getLogger();
+
+    @Autowired
+    private SessionFactory sessionFactory;
     
+    @Transactional
     public User save(User user) {
         logger.debug("about to insert into DB: "+user);
 
         try{
-            Session session=SessionUtil.getSession();
-            session.beginTransaction();
+            Session session=sessionFactory.getCurrentSession();
             session.save(user);
-            session.getTransaction().commit();
 
-            User userFromDB=null;
-            try(Session session2=SessionUtil.getSession()){
-                session2.beginTransaction();
-                Query query=session2.createQuery("From User where email='"+user.getEmail()+"'");
-                userFromDB=(User)query.getSingleResult();
-            }
+            User userFromDB=findByMail(user.getEmail());
             return userFromDB;
         }catch(Exception e){
             logger.error("Error saving user");
@@ -36,13 +36,12 @@ public class UserRepository {
         }
     }
 
+
     public User findByMail(String email){
         logger.debug("about to fetch user from DB: "+email);
         User user=null;
-        try(
-            Session session=SessionUtil.getSession();
-        ){
-            session.beginTransaction();
+        try{
+            Session session=sessionFactory.getCurrentSession();
             Query query=session.createQuery("From User where email='"+email+"'");
             user=(User)query.getSingleResult();
         }catch(Exception e){

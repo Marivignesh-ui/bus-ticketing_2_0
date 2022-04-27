@@ -7,21 +7,28 @@ import java.util.UUID;
 import com.mari.bus_ticketing2.domain.BlockedTicket;
 import com.mari.bus_ticketing2.domain.BusRoute;
 import com.mari.bus_ticketing2.domain.Ticket;
-import com.mari.bus_ticketing2.util.SessionUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+@Repository
 public class TicketRepository {
     
     private static final Logger logger=LogManager.getLogger(TicketRepository.class);
 
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    @Transactional
     public List<Ticket> getTickets(String busRouteId,String date){
-        try(Session session=SessionUtil.getSession()){
+        try {
+            Session session=sessionFactory.getCurrentSession();
             logger.info("session created successfully to getTickets");
-            session.beginTransaction();
             Query<Ticket> query=session.createQuery("From Ticket where bus_route_id='"+busRouteId+"' and date='"+date+"'",Ticket.class);
             List<Ticket> tickets=query.getResultList();
             Query<BlockedTicket> query1=session.createQuery("From BlockedTicket where bus_route_id='"+busRouteId+"' and date='"+date+"'",BlockedTicket.class);
@@ -38,9 +45,10 @@ public class TicketRepository {
         }
     }
 
+    @Transactional
     public BlockedTicket blockTickets(String seatId) {    
-        try(Session session=SessionUtil.getSession()){
-            session.beginTransaction();
+        try {
+            Session session=sessionFactory.getCurrentSession();
             UUID busRouteId=UUID.fromString(seatId.substring(0,36));
             String date=seatId.substring(37,47);
             int seatNumber=Integer.parseInt(seatId.substring(48,50));
@@ -57,9 +65,10 @@ public class TicketRepository {
         }
     }
 
+    @Transactional
     public List<Ticket> bookTickets(List<Ticket> tickets){
-        try(Session session=SessionUtil.getSession()){
-            session.beginTransaction();
+        try {
+            Session session=sessionFactory.getCurrentSession();
             logger.info("$$$$$$$$$************  ticket-list  ***********$$$$$$$$$: "+tickets);
             for(Ticket ticket:tickets){
                 logger.info("$$$$$$$$$************ ticket ***********$$$$$$$$$: "+ticket);
@@ -73,7 +82,6 @@ public class TicketRepository {
             int remainingTickets=busRoute.getRemainingTickets()-tickets.size();
             busRoute.setRemainingTickets(remainingTickets);
             session.save(busRoute);
-            session.getTransaction().commit();
             return tickets;
         }catch(Exception e){
             logger.error("Error booking tickets");

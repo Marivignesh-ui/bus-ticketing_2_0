@@ -38,45 +38,40 @@ public class BusController {
     private BusService busService;
 
     @GetMapping
-    protected String doGet(@RequestParam("startterminal")String startTerminal,
+    protected void doGet(@RequestParam("startterminal")String startTerminal,
                         @RequestParam("endterminal")String endTerminal,
                         @RequestParam("date")String date,  
                         HttpServletResponse resp,
                         Model model
     ){
-        WebResponse<List<Bus>> webResponse;
+        WebResponse<List<Bus>> webResponse=null;
         String resString=null;
         try {
             //String startTerminal=req.getParameter("startterminal");
             // String endTerminal=req.getParameter("endterminal");
             // String date=req.getParameter("date");
-
             logger.info("request recieved startterminal:"+startTerminal+" endTerminal "+endTerminal+" date: "+date);
 
             List<Bus> buses=busService.getBusesService(date,startTerminal,endTerminal);
-            
-            // webResponse=new WebResponse<List<Bus>>(true, "Bus List Retrived sucessfully", buses);
+            webResponse=new WebResponse<List<Bus>>(true, "Bus List Retrived sucessfully", buses);
             resp.setStatus(200);
-            model.addAttribute("bus", buses);
-            resString="HomePage";
         }catch(Exception e){
             logger.error("Error getting Bus");
             logger.catching(e);
             resp.setStatus(500);
             webResponse=new WebResponse<>(false, "Error Getting Bus");
         }
-        return resString;
-        // Gson gson=new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        // resString=gson.toJson(webResponse);
-        // resp.setHeader("Access-Control-Allow-Origin", "*");
-        // resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        // resp.setHeader("Access-Control-Allow-Header", "Content-Type");
-        // resp.setContentType("application/json");
-        // try {
-        //     resp.getWriter().write(resString);
-        // } catch (IOException e) {
-        //     logger.catching(e);
-        // }
+        Gson gson=new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        resString=gson.toJson(webResponse);
+        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        resp.setHeader("Access-Control-Allow-Header", "Content-Type");
+        resp.setContentType("application/json");
+        try {
+            resp.getWriter().write(resString);
+        } catch (IOException e) {
+            logger.catching(e);
+        }
     }
 
     @PostMapping

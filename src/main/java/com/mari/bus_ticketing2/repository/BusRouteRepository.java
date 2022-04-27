@@ -5,24 +5,32 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import com.mari.bus_ticketing2.domain.Bus;
 import com.mari.bus_ticketing2.domain.BusRoute;
-import com.mari.bus_ticketing2.util.SessionUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.joda.time.DateTime;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+@Repository
 public class BusRouteRepository {
     
     private static final Logger logger=LogManager.getLogger(BusRouteRepository.class);
 
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    @Transactional
     public void createRoutes(){
-        try(Session session=SessionUtil.getSession()){
+        try {
+            Session session=sessionFactory.getCurrentSession();
             logger.info("Session initiated to create bus routes");
-            session.beginTransaction();
             Query<Bus> query=session.createQuery("From Bus",Bus.class);
             List<Bus> buses=query.getResultList();
             for(Bus bus:buses){
@@ -45,7 +53,6 @@ public class BusRouteRepository {
                 BusRoute busRoute=new BusRoute(bus, dateString, bus.getTotalSeats());
                 session.save(busRoute);
             }
-            session.getTransaction().commit();
         } catch (ParseException e) {
             logger.error("Error creating Bus routes");
             logger.catching(e);

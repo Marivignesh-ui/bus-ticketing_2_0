@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,13 +19,23 @@ import com.mari.bus_ticketing2.services.TicketService;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-@WebServlet("/tickets")
-public class TicketController extends HttpServlet{
+@Controller
+@RequestMapping("/tickets")
+public class TicketController{
     
     private static final Logger logger=LogManager.getLogger(TicketController.class);
 
-    @Override
+    @Autowired
+    private TicketService ticketService;
+
+    @GetMapping
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         WebResponse<List<Ticket>> webResponse;
         String resString=null;
@@ -36,7 +44,7 @@ public class TicketController extends HttpServlet{
             String busRouteId=req.getParameter("route_id");
             String date=req.getParameter("date");
 
-            List<Ticket> tickets=new TicketService().getTicketService(busRouteId,date);
+            List<Ticket> tickets=ticketService.getTicketService(busRouteId,date);
             webResponse=new WebResponse<List<Ticket>>(true, "Tickets retrived successfully", tickets);
             resp.setStatus(200);
         }catch(Exception e){
@@ -54,7 +62,7 @@ public class TicketController extends HttpServlet{
         resp.getWriter().write(resString);
     }
 
-    @Override
+    @PostMapping
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         WebResponse<BlockedTicket> webResponse;
         String resString=null;
@@ -63,7 +71,7 @@ public class TicketController extends HttpServlet{
             String seatId=(reader.nextName().equals("seatId"))?reader.nextString():null;
             reader.endObject();
 
-            BlockedTicket bTicket=new TicketService().blockTicketService(seatId);
+            BlockedTicket bTicket=ticketService.blockTicketService(seatId);
             webResponse=new WebResponse<>(true, "blocked tickets Successfully",bTicket);
         }catch(Exception e){
             logger.error("Error blocking tickets");
@@ -80,7 +88,7 @@ public class TicketController extends HttpServlet{
         resp.getWriter().write(resString);
     }
 
-    @Override
+    @PutMapping
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
         try(JsonReader reader=new JsonReader(req.getReader())){
             logger.debug("Request to book tickets received successfully!!");
@@ -93,7 +101,7 @@ public class TicketController extends HttpServlet{
             List<Ticket> ticketsfromDB=null;
             logger.info("********-------------Request Object read Successfully-----------*******:"+tickets);
             logger.info("!! About to call bookTicketService");
-            ticketsfromDB=new TicketService().bookTicketService(tickets);
+            ticketsfromDB=ticketService.bookTicketService(tickets);
             try(PrintWriter writer=resp.getWriter()){
                 resp.setHeader("Access-Control-Allow-Origin", "*");
                 resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -113,7 +121,7 @@ public class TicketController extends HttpServlet{
         }   
     }
 
-    @Override
+
     protected void doOptions(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         res.setHeader("Access-Control-Allow-Origin", "*");
         res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");   

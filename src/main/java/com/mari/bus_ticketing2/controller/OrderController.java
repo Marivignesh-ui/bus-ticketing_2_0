@@ -16,12 +16,16 @@ import com.razorpay.Order;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-public class OrderController extends HttpServlet{
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+@Controller
+@RequestMapping("/order")
+public class OrderController{
 
     private static final Logger logger=LogManager.getLogger(OrderController.class);
 
-    @Override
+    @PostMapping
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         WebResponse<Order> webResponse;
         String resString;

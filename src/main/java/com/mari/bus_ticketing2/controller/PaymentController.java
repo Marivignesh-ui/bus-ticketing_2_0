@@ -10,7 +10,6 @@ import java.util.List;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -24,12 +23,17 @@ import com.mari.bus_ticketing2.services.TicketService;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-public class PaymentController extends HttpServlet{
+@Controller
+@RequestMapping("/booktickets")
+public class PaymentController {
 
     private static final Logger logger=LogManager.getLogger(PaymentController.class);
 
-    @Override
+    @PostMapping
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String razorpay_payment_id = req.getParameter("razorpay_payment_id");
         String razorpay_order_id = req.getParameter("razorpay_order_id");
@@ -46,8 +50,8 @@ public class PaymentController extends HttpServlet{
                     tickets.add(new Gson().fromJson(reader,Ticket.class));
                 }
                 reader.endArray();
-                
-                logger.debug("Request Object read Successfully!! About to call bookTicketService");
+                logger.info("********-------------Request Object read Successfully-----------*******:"+tickets);
+                logger.info("!! About to call bookTicketService");
                 ticketsfromDB=new TicketService().bookTicketService(tickets);
                 try(PrintWriter writer=resp.getWriter()){
                     resp.setHeader("Access-Control-Allow-Origin", "*");
@@ -65,9 +69,7 @@ public class PaymentController extends HttpServlet{
                 resp.setHeader("Access-Control-Allow-Origin", "*");
                 resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
                 resp.setHeader("Access-Control-Allow-Header", "Content-Type");
-                resp.sendError(1,"Error on booking Ticket");
-                e.printStackTrace();
-            }
+            } 
         }
 
 
@@ -106,10 +108,10 @@ public class PaymentController extends HttpServlet{
         return isSignatureValid;
     }
 
-    @Override
-    protected void doOptions(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        res.setHeader("Access-Control-Allow-Origin", "*");
-        res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");   
-        res.setHeader("Access-Control-Allow-Header", "Content-Type");
-    }
+    // @Override
+    // protected void doOptions(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+    //     res.setHeader("Access-Control-Allow-Origin", "*");
+    //     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");   
+    //     res.setHeader("Access-Control-Allow-Header", "Content-Type");
+    // }
 }

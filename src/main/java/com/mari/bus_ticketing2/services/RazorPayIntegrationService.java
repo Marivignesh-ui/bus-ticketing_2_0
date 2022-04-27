@@ -8,7 +8,9 @@ import com.razorpay.RazorpayException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
+import org.springframework.stereotype.Service;
 
+@Service
 public class RazorPayIntegrationService {
     
     private static final Logger logger=LogManager.getLogger(RazorPayIntegrationService.class);
@@ -34,8 +36,4 @@ public class RazorPayIntegrationService {
         }
         return order;
     }
-
-    // public static void saveOrder(Order order,String userId){
-    //     new OrderRepository().save(order,userId);
-    // }
 }

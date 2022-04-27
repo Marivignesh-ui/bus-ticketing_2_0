@@ -1,25 +1,28 @@
 package com.mari.bus_ticketing2.controller;
 
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import com.mari.bus_ticketing2.services.BusRouteService;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-@WebServlet(urlPatterns = {"/createRoutes"})
-public class BusRouteController extends HttpServlet{
+@Controller
+@RequestMapping("/createRoutes")
+public class BusRouteController {
 
     private static final Logger logger=LogManager.getLogger();
 
-    @Override
-    public void doGet(HttpServletRequest req,HttpServletResponse res){
+    @Autowired
+    private BusRouteService busRouteService;
+
+    @GetMapping
+    public void doGet(){
         try{
             logger.info("Request received to create routes");
-            BusRouteService busRouteService=new BusRouteService();
             busRouteService.createRoutesService();
         }catch(Exception e){
             logger.error("Error creating routes");
