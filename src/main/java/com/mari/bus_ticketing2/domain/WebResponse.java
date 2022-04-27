@@ -27,5 +27,29 @@ public class WebResponse<T> {
         return "WebResponse [message=" + message + ", ok=" + ok + ", responseObject=" + responseObject + "]";
     }
 
+    public boolean isOk() {
+        return ok;
+    }
+
+    public void setOk(boolean ok) {
+        this.ok = ok;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public T getResponseObject() {
+        return responseObject;
+    }
+
+    public void setResponseObject(T responseObject) {
+        this.responseObject = responseObject;
+    }
+
     
 }

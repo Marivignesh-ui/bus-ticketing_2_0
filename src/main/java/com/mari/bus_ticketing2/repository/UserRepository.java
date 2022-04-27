@@ -36,7 +36,7 @@ public class UserRepository {
         }
     }
 
-
+    @Transactional
     public User findByMail(String email){
         logger.debug("about to fetch user from DB: "+email);
         User user=null;

@@ -2,6 +2,7 @@ com\mari\bus_ticketing2\controller\RegisterController.class
 com\mari\bus_ticketing2\domain\Order.class
 com\mari\bus_ticketing2\util\HashUtil.class
 com\mari\bus_ticketing2\controller\LoginController.class
+com\mari\bus_ticketing2\domain\OrderDto.class
 com\mari\bus_ticketing2\services\BusRouteService.class
 com\mari\bus_ticketing2\services\TicketService.class
 com\mari\bus_ticketing2\controller\TicketController.class
@@ -18,6 +19,7 @@ com\mari\bus_ticketing2\repository\UserRepository.class
 com\mari\bus_ticketing2\repository\BusRepository.class
 com\mari\bus_ticketing2\services\LoginService.class
 com\mari\bus_ticketing2\services\BusService.class
+com\mari\bus_ticketing2\domain\TicketDto.class
 com\mari\bus_ticketing2\controller\PaymentController.class
 com\mari\bus_ticketing2\util\SessionUtil.class
 com\mari\bus_ticketing2\domain\Bus.class

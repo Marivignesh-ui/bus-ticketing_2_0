@@ -1,50 +1,48 @@
 package com.mari.bus_ticketing2.controller;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.stream.JsonReader;
 import com.mari.bus_ticketing2.domain.BlockedTicket;
 import com.mari.bus_ticketing2.domain.Ticket;
+import com.mari.bus_ticketing2.domain.TicketDto;
 import com.mari.bus_ticketing2.domain.WebResponse;
 import com.mari.bus_ticketing2.services.TicketService;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping("/tickets")
 public class TicketController{
     
     private static final Logger logger=LogManager.getLogger(TicketController.class);
 
+    private final TicketService ticketService;
+    
     @Autowired
-    private TicketService ticketService;
+    public TicketController(TicketService ticketService) {
+        this.ticketService = ticketService;
+    }
 
     @GetMapping
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected WebResponse<List<Ticket>> doGet(@RequestParam String busRouteId,@RequestParam String date, HttpServletResponse resp) {
         WebResponse<List<Ticket>> webResponse;
-        String resString=null;
         try {
             //String busId=req.getParameter("bus_id");
-            String busRouteId=req.getParameter("route_id");
-            String date=req.getParameter("date");
-
             List<Ticket> tickets=ticketService.getTicketService(busRouteId,date);
+            for(int i=0;i<tickets.size();i++){
+               tickets.get(i).getBusRoute().setBus(null);
+            }
             webResponse=new WebResponse<List<Ticket>>(true, "Tickets retrived successfully", tickets);
             resp.setStatus(200);
         }catch(Exception e){
@@ -53,25 +51,19 @@ public class TicketController{
             resp.setStatus(500);
             webResponse=new WebResponse<>(false, "Error Getting Tickets");
         }
-        Gson gson=new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        resString=gson.toJson(webResponse);
         resp.setHeader("Access-Control-Allow-Origin", "*");
         resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         resp.setHeader("Access-Control-Allow-Header", "Content-Type");
         resp.setContentType("application/json");
-        resp.getWriter().write(resString);
+        return webResponse;
     }
 
     @PostMapping
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected WebResponse<BlockedTicket> doPost(@RequestBody TicketDto ticketDto, HttpServletResponse resp) {
         WebResponse<BlockedTicket> webResponse;
-        String resString=null;
-        try(JsonReader reader=new JsonReader(req.getReader())){
-            reader.beginObject();
-            String seatId=(reader.nextName().equals("seatId"))?reader.nextString():null;
-            reader.endObject();
-
-            BlockedTicket bTicket=ticketService.blockTicketService(seatId);
+        try{
+            BlockedTicket bTicket=ticketService.blockTicketService(ticketDto.getSeatId());
+            bTicket.setBusRoute(null);
             webResponse=new WebResponse<>(true, "blocked tickets Successfully",bTicket);
         }catch(Exception e){
             logger.error("Error blocking tickets");
@@ -79,38 +71,28 @@ public class TicketController{
             resp.setStatus(500);
             webResponse=new WebResponse<>(false, "Error blocking tickets");
         }
-        Gson gson=new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        resString=gson.toJson(webResponse);
         resp.setHeader("Access-Control-Allow-Origin", "*");
         resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         resp.setHeader("Access-Control-Allow-Header", "Content-Type");
         resp.setContentType("application/json");
-        resp.getWriter().write(resString);
+        return webResponse;
     }
 
     @PutMapping
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
-        try(JsonReader reader=new JsonReader(req.getReader())){
+    protected WebResponse<List<Ticket>> doPut(@RequestBody List<Ticket> tickets, HttpServletResponse resp) {
+        WebResponse<List<Ticket>> webResponse=null;
+        try {
             logger.debug("Request to book tickets received successfully!!");
-            reader.beginArray();
-            List<Ticket> tickets=new ArrayList<Ticket>();
-            while(reader.hasNext()){
-                tickets.add(new Gson().fromJson(reader,Ticket.class));
-            }
-            reader.endArray();
             List<Ticket> ticketsfromDB=null;
             logger.info("********-------------Request Object read Successfully-----------*******:"+tickets);
             logger.info("!! About to call bookTicketService");
             ticketsfromDB=ticketService.bookTicketService(tickets);
-            try(PrintWriter writer=resp.getWriter()){
-                resp.setHeader("Access-Control-Allow-Origin", "*");
-                resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-                resp.setHeader("Access-Control-Allow-Header", "Content-Type");
-                resp.setStatus(200);
-                resp.setContentType("application/json");
-                writer.println(new Gson().toJson(ticketsfromDB));
-                writer.flush();
-            }
+            resp.setHeader("Access-Control-Allow-Origin", "*");
+            resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            resp.setHeader("Access-Control-Allow-Header", "Content-Type");
+            resp.setStatus(200);
+            resp.setContentType("application/json");
+            webResponse=new WebResponse<List<Ticket>>(true,"ticket booked successfully",ticketsfromDB);
         }catch(Exception e){
             logger.error(e);
             logger.catching(e);
@@ -118,13 +100,15 @@ public class TicketController{
             resp.setHeader("Access-Control-Allow-Origin", "*");
             resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
             resp.setHeader("Access-Control-Allow-Header", "Content-Type");
+            webResponse=new WebResponse<List<Ticket>>(true,"ticket booking failed");
         }   
+        return webResponse;
     }
 
 
-    protected void doOptions(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        res.setHeader("Access-Control-Allow-Origin", "*");
-        res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");   
-        res.setHeader("Access-Control-Allow-Header", "Content-Type");
-    }
+    // protected void doOptions(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+    //     res.setHeader("Access-Control-Allow-Origin", "*");
+    //     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");   
+    //     res.setHeader("Access-Control-Allow-Header", "Content-Type");
+    // }
 }

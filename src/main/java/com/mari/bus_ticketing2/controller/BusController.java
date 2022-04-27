@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.mari.bus_ticketing2.domain.Bus;
 import com.mari.bus_ticketing2.domain.WebResponse;
@@ -18,41 +17,45 @@ import com.mari.bus_ticketing2.services.BusService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-// @WebServlet(urlPatterns = {"/bus"})
-@Controller
+@RestController
 @RequestMapping("/bus")
 public class BusController {
 
     private static final Logger logger=LogManager.getLogger(BusController.class);
 
+    private final BusService busService;
+    
     @Autowired
-    private BusService busService;
+    public BusController(BusService busService) {
+        this.busService = busService;
+    }
 
     @GetMapping
-    protected void doGet(@RequestParam("startterminal")String startTerminal,
+    protected WebResponse<List<Bus>> doGet(@RequestParam("startterminal")String startTerminal,
                         @RequestParam("endterminal")String endTerminal,
                         @RequestParam("date")String date,  
-                        HttpServletResponse resp,
-                        Model model
+                        HttpServletResponse resp
     ){
         WebResponse<List<Bus>> webResponse=null;
-        String resString=null;
         try {
-            //String startTerminal=req.getParameter("startterminal");
-            // String endTerminal=req.getParameter("endterminal");
-            // String date=req.getParameter("date");
             logger.info("request recieved startterminal:"+startTerminal+" endTerminal "+endTerminal+" date: "+date);
 
             List<Bus> buses=busService.getBusesService(date,startTerminal,endTerminal);
+            for(int i=0;i<buses.size();i++){
+                for(int j=0;j<buses.get(i).getBusRoutes().size();j++){
+                    buses.get(i).getBusRoutes().get(j).setBus(null);
+                }
+            }
             webResponse=new WebResponse<List<Bus>>(true, "Bus List Retrived sucessfully", buses);
             resp.setStatus(200);
         }catch(Exception e){
@@ -61,22 +64,15 @@ public class BusController {
             resp.setStatus(500);
             webResponse=new WebResponse<>(false, "Error Getting Bus");
         }
-        Gson gson=new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        resString=gson.toJson(webResponse);
         resp.setHeader("Access-Control-Allow-Origin", "*");
         resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         resp.setHeader("Access-Control-Allow-Header", "Content-Type");
         resp.setContentType("application/json");
-        try {
-            resp.getWriter().write(resString);
-        } catch (IOException e) {
-            logger.catching(e);
-        }
+        return webResponse;
     }
 
     @PostMapping
-    public void doPost(HttpServletRequest req,HttpServletResponse res) {
-        String resString=null;
+    public WebResponse<Bus> doPost(HttpServletRequest req,HttpServletResponse res) {
         WebResponse<Bus> webResponse=null;
         try(JsonReader reader=new JsonReader(req.getReader())){
             Bus bus=new Gson().fromJson(reader, Bus.class);
@@ -93,33 +89,20 @@ public class BusController {
             res.setStatus(500);
             webResponse=new WebResponse<>(false, "Error creating Bus");
         }
-        resString=new Gson().toJson(webResponse);
         res.setContentType("application/json");
         res.setHeader("Access-Control-Allow-Origin", "*");
         res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         res.setHeader("Access-Control-Allow-Header", "Content-Type");
-        try {
-            res.getWriter().write(resString);
-        } catch (IOException e) {
-            logger.catching(e);            
-        }
+        return webResponse;
     }
 
     @PutMapping
-    public void doPut(HttpServletRequest req,HttpServletResponse res) {
-        String resString=null;
+    public WebResponse<Bus> doPut(@RequestBody Bus bus,HttpServletResponse res) {
         WebResponse<Bus> webResponse=null;
-        try(JsonReader reader=new JsonReader(req.getReader())){
-            reader.beginObject();
-            UUID busId=(reader.nextName().equals("busId"))?UUID.fromString(reader.nextString()):null;
-            String startTerminal=(reader.nextName().equals("startTerminal"))?reader.nextString():null;;
-            String endTerminal=(reader.nextName().equals("endTerminal"))?reader.nextString():null;;
-            String journeyType=(reader.nextName().equals("journeyType"))?reader.nextString():null;;
-            reader.endObject();
-
-            Bus bus=busService.updateBusService(busId,startTerminal,endTerminal,journeyType);
+        try{ 
+            Bus busfromDB=busService.updateBusService(bus.getId(),bus.getStartTerminal(),bus.getEndTerminal(),bus.getJourneyType());
             bus.setBusRoutes(null);
-            webResponse=new WebResponse<Bus>(true, "successfully updated bus details!!",bus);
+            webResponse=new WebResponse<Bus>(true, "successfully updated bus details!!",busfromDB);
             res.setStatus(200);
         }catch(Exception e){
             logger.error(e);
@@ -127,26 +110,18 @@ public class BusController {
             res.setStatus(500);
             webResponse=new WebResponse<>(false, "Error updating bus details");
         }
-        resString=new Gson().toJson(webResponse);
         res.setContentType("application/json");
         res.setHeader("Access-Control-Allow-Origin", "*");
         res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         res.setHeader("Access-Control-Allow-Header", "Content-Type");
-        try {
-            res.getWriter().write(resString);
-        } catch (IOException e) {
-            logger.catching(e);
-        }
+        return webResponse;
     }
 
-    @DeleteMapping
-    public void doDelete(HttpServletRequest req,HttpServletResponse res) {
-        String resString=null;
+    @DeleteMapping("/{id}")
+    public WebResponse<Bus> doDelete(@PathVariable String id,HttpServletResponse res) {
         WebResponse<Bus> webResponse=null;
-        try(JsonReader reader=new JsonReader(req.getReader())){
-            reader.beginObject();
-            UUID busId=(reader.nextName().equals("busId"))?UUID.fromString(reader.nextString()):null;
-            reader.endObject();
+        try {
+            UUID busId=UUID.fromString(id);
 
             logger.info("request object read successfully!! "+busId);
 
@@ -160,16 +135,11 @@ public class BusController {
             res.setStatus(500);
             webResponse=new WebResponse<Bus>(false, "Error deleting bus");
         }
-        resString=new Gson().toJson(webResponse);
         res.setContentType("application/json");
         res.setHeader("Access-Control-Allow-Origin", "*");
         res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         res.setHeader("Access-Control-Allow-Header", "Content-Type");
-        try {
-            res.getWriter().write(resString);
-        } catch (IOException e) {
-            logger.catching(e);
-        }
+        return webResponse;
     }
 
     
