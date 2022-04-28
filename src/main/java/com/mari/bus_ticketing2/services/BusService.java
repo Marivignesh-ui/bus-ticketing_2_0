@@ -24,7 +24,7 @@ public class BusService {
     }
 
     public Bus createBusService(Bus bus){
-        logger.info("called createBusService: "+bus.getId());
+        logger.info("called createBusService: "+bus.getId()); 
         return busRepository.createBus(bus);
     }
 

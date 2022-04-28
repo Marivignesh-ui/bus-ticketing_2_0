@@ -1,30 +1,27 @@
 package com.mari.bus_ticketing2.controller;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
 import com.mari.bus_ticketing2.domain.PaymentResponse;
 import com.mari.bus_ticketing2.domain.Ticket;
+import com.mari.bus_ticketing2.domain.WebResponse;
 import com.mari.bus_ticketing2.services.PropertiesService;
 import com.mari.bus_ticketing2.services.TicketService;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -33,35 +30,30 @@ public class PaymentController {
 
     private static final Logger logger=LogManager.getLogger(PaymentController.class);
 
+    @Autowired
+    private TicketService ticketService;
+
     @PostMapping
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String razorpay_payment_id = req.getParameter("razorpay_payment_id");
-        String razorpay_order_id = req.getParameter("razorpay_order_id");
-        String razorpay_signature = req.getParameter("razorpay_signature");
+    protected WebResponse<List<Ticket>> doPost(@RequestParam String razorpay_payment_id,
+                @RequestParam String razorpay_order_id,
+                @RequestParam String razorpay_signature,
+                @RequestBody List<Ticket> tickets, HttpServletResponse resp){
 
         boolean isSignatureValid = isSignatureValid(razorpay_order_id, razorpay_payment_id, razorpay_signature);
-        List<Ticket> ticketsfromDB=null;
+        WebResponse<List<Ticket>> webResponse=null;
         if(isSignatureValid){
-            try(JsonReader reader=new JsonReader(req.getReader())){
+            try {
                 logger.debug("Request to book tickets received successfully!!");
-                reader.beginArray();
-                List<Ticket> tickets=new ArrayList<Ticket>();
-                while(reader.hasNext()){
-                    tickets.add(new Gson().fromJson(reader,Ticket.class));
-                }
-                reader.endArray();
+                List<Ticket> ticketsfromDB=null;
                 logger.info("********-------------Request Object read Successfully-----------*******:"+tickets);
                 logger.info("!! About to call bookTicketService");
-                ticketsfromDB=new TicketService().bookTicketService(tickets);
-                try(PrintWriter writer=resp.getWriter()){
-                    resp.setHeader("Access-Control-Allow-Origin", "*");
-                    resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-                    resp.setHeader("Access-Control-Allow-Header", "Content-Type");
-                    resp.setStatus(200);
-                    resp.setContentType("application/json");
-                    writer.println(new Gson().toJson(ticketsfromDB));
-                    writer.flush();
-                }
+                ticketsfromDB=ticketService.bookTicketService(tickets);
+                resp.setHeader("Access-Control-Allow-Origin", "*");
+                resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+                resp.setHeader("Access-Control-Allow-Header", "Content-Type");
+                resp.setStatus(200);
+                resp.setContentType("application/json");
+                webResponse=new WebResponse<List<Ticket>>(true,"ticket booked successfully",ticketsfromDB);
             }catch(Exception e){
                 logger.error(e);
                 logger.catching(e);
@@ -69,13 +61,13 @@ public class PaymentController {
                 resp.setHeader("Access-Control-Allow-Origin", "*");
                 resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
                 resp.setHeader("Access-Control-Allow-Header", "Content-Type");
-            } 
+                webResponse=new WebResponse<List<Ticket>>(false,"ticket booking failed");
+            }   
+            return webResponse; 
         }
 
-
-        String respString = new Gson().toJson(new PaymentResponse(razorpay_payment_id, razorpay_order_id, isSignatureValid));
-        resp.getWriter().write(respString);
-        resp.getWriter().flush();
+        webResponse=new WebResponse(false,"payment failed",new PaymentResponse(razorpay_payment_id, razorpay_order_id, isSignatureValid));
+        return webResponse;
     }
 
     static boolean isSignatureValid(String razorpay_order_id, String razorpay_payment_id, String razorpay_signature) {

@@ -11,14 +11,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.google.gson.annotations.Expose;
-
 import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "bus_routes_history")
 public class BusRoute {
-    @Expose
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Type(type = "uuid-char")
@@ -28,11 +26,11 @@ public class BusRoute {
     @JoinColumn(name = "bus_id")
     private Bus bus;
 
-    @Expose
+    
     @Column(name = "date_of_journey")
     private String date;
 
-    @Expose
+    
     @Column(name = "remaining_tickets")
     private int remainingTickets;
 

@@ -8,8 +8,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
 import com.mari.bus_ticketing2.domain.Bus;
 import com.mari.bus_ticketing2.domain.WebResponse;
 import com.mari.bus_ticketing2.services.BusService;
@@ -72,10 +70,9 @@ public class BusController {
     }
 
     @PostMapping
-    public WebResponse<Bus> doPost(HttpServletRequest req,HttpServletResponse res) {
+    public WebResponse<Bus> doPost(@RequestBody Bus bus,HttpServletResponse res) {
         WebResponse<Bus> webResponse=null;
-        try(JsonReader reader=new JsonReader(req.getReader())){
-            Bus bus=new Gson().fromJson(reader, Bus.class);
+        try{
             logger.info("request object read successfully!! : "+bus);
 
             bus=busService.createBusService(bus);
@@ -100,8 +97,9 @@ public class BusController {
     public WebResponse<Bus> doPut(@RequestBody Bus bus,HttpServletResponse res) {
         WebResponse<Bus> webResponse=null;
         try{ 
+            logger.info("Request received to update:"+bus);
             Bus busfromDB=busService.updateBusService(bus.getId(),bus.getStartTerminal(),bus.getEndTerminal(),bus.getJourneyType());
-            bus.setBusRoutes(null);
+            busfromDB.setBusRoutes(null);
             webResponse=new WebResponse<Bus>(true, "successfully updated bus details!!",busfromDB);
             res.setStatus(200);
         }catch(Exception e){

@@ -1,13 +1,12 @@
 package com.mari.bus_ticketing2.repository;
 
-import javax.persistence.Query;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import com.mari.bus_ticketing2.domain.User;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,15 +16,14 @@ public class UserRepository {
     private static final Logger logger=LogManager.getLogger();
 
     @Autowired
-    private SessionFactory sessionFactory;
+    private EntityManager entityManager;
     
     @Transactional
     public User save(User user) {
         logger.debug("about to insert into DB: "+user);
 
         try{
-            Session session=sessionFactory.getCurrentSession();
-            session.save(user);
+            entityManager.persist(user);
 
             User userFromDB=findByMail(user.getEmail());
             return userFromDB;
@@ -41,8 +39,7 @@ public class UserRepository {
         logger.debug("about to fetch user from DB: "+email);
         User user=null;
         try{
-            Session session=sessionFactory.getCurrentSession();
-            Query query=session.createQuery("From User where email='"+email+"'");
+            TypedQuery<User> query=entityManager.createQuery("From User where email='"+email+"'",User.class);
             user=(User)query.getSingleResult();
         }catch(Exception e){
             logger.error("Error getting by User mail"+email);

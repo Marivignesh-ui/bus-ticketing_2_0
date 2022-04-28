@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 import com.mari.bus_ticketing2.domain.Bus;
@@ -12,9 +14,6 @@ import com.mari.bus_ticketing2.domain.BusRoute;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -24,17 +23,16 @@ public class BusRouteRepository {
     private static final Logger logger=LogManager.getLogger(BusRouteRepository.class);
 
     @Autowired
-    private SessionFactory sessionFactory;
+    private EntityManager entityManager;
 
     @Transactional
     public void createRoutes(){
         try {
-            Session session=sessionFactory.getCurrentSession();
             logger.info("Session initiated to create bus routes");
-            Query<Bus> query=session.createQuery("From Bus",Bus.class);
+            TypedQuery<Bus> query=entityManager.createQuery("From Bus",Bus.class);
             List<Bus> buses=query.getResultList();
             for(Bus bus:buses){
-                Query<String> query1=session.createQuery("select MAX(date) From BusRoute where bus_id='"+bus.getId()+"'",String.class);
+                TypedQuery<String> query1=entityManager.createQuery("select MAX(date) From BusRoute where bus_id='"+bus.getId()+"'",String.class);
                 String dateString=(String)query1.getSingleResult();
                 Date utilDate=new SimpleDateFormat("yyyy-mm-dd").parse(dateString);
                 if(bus.getJourneyType().toLowerCase().equals("everyday")){
@@ -51,7 +49,7 @@ public class BusRouteRepository {
                     }
                 }
                 BusRoute busRoute=new BusRoute(bus, dateString, bus.getTotalSeats());
-                session.save(busRoute);
+                entityManager.persist(busRoute);
             }
         } catch (ParseException e) {
             logger.error("Error creating Bus routes");

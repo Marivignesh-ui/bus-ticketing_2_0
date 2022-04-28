@@ -12,7 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.google.gson.annotations.Expose;
+
 
 import org.hibernate.annotations.Type;
 
@@ -20,7 +20,7 @@ import org.hibernate.annotations.Type;
 @Table(name = "blocked_tickets")
 public class BlockedTicket {
 
-    @Expose
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Type(type = "uuid-char")
@@ -30,23 +30,23 @@ public class BlockedTicket {
     @JoinColumn(name = "bus_route_id")
     private BusRoute busRoute;
 
-    @Expose
+    
     @Column(name = "date")
     private String date;
 
-    @Expose
+    
     @Column(name = "is_blocked")
     private boolean isBlocked;
 
-    @Expose
+    
     @Column(name = "seat_id")
     private String seatId;
 
-    @Expose
+    
     @Column(name = "seat_no")
     private int seatNumber;
 
-    @Expose
+    
     @Column(name = "booked_at")
     private Date bookedAt;
 

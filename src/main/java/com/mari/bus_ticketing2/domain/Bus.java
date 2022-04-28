@@ -12,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.google.gson.annotations.Expose;
 
 import org.hibernate.annotations.Type;
 
@@ -20,41 +19,41 @@ import org.hibernate.annotations.Type;
 @Table(name = "bus_master")
 public class Bus {
 
-    @Expose
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Type(type = "uuid-char")
     private UUID id;
 
-    @Expose
+    
     @Column(name="start_terminal")
     private String startTerminal;
 
-    @Expose
+    
     @Column(name = "end_terminal")
     private String endTerminal;
 
-    @Expose
+    
     @Column(name = "registration_no")
     private String registrationNumber;
 
-    @Expose
+    
     @Column(name = "travels_name")
     private String travelsName;
 
-    @Expose
+    
     @Column(name = "bus_type")
     private String busType;
 
-    @Expose
+    
     @Column(name = "total_seats")
     private int totalSeats;
 
-    @Expose
+    
     @Column(name = "journey_type")
     private String journeyType;
 
-    @Expose
+    
     @OneToMany(mappedBy = "bus")
     private List<BusRoute> busRoutes=new ArrayList<>();
 
